@@ -55,6 +55,12 @@ cd server
 go mod tidy
 go run main.go
 ```
+
+dependencies if missing:
+```
+go get github.com/gin-gonic/gin
+go get github.com/gin-contrib/cors
+```
 *The server will start on `http://localhost:8080`*
 
 ### 2. Run the Frontend
@@ -62,6 +68,13 @@ go run main.go
 cd client
 npm install
 npm run dev
+```
+
+dependencies if missing:
+```
+npm install lucide-react
+npm install -D vitest @vitest/coverage-istanbul jsdom
+
 ```
 *The UI will be available at `http://localhost:5173`*
 
