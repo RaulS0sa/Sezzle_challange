@@ -79,6 +79,9 @@ func parseExpression(s []rune, i *int) (float64, error) {
 					if err != nil {
 						return 0, err
 					}
+					if val < 0 {
+						return 0, fmt.Errorf("invalid input: %f", val)
+					}
 					num = math.Sqrt(val)
 				}
 			}

@@ -22,7 +22,10 @@ const append = (val: string) => {
       // Continuing the calculation using the result as the first operand
       setExpression(display);
       // If we continue with a parenthesis, add implicit multiplication: "10" -> "10*("
-      if (val === '(' || val === 'sqrt(') {
+      if (display == '0' && (val === '(' || val === 'sqrt(')) {
+        setDisplay(val);
+      }
+      else if (val === '(' || val === 'sqrt(') {
         setDisplay(display + '*' + val);
       } else {
         setDisplay(display + val);
@@ -124,7 +127,7 @@ const append = (val: string) => {
           <CalcButton label="2" onClick={() => append('2')} />
           <CalcButton label="3" onClick={() => append('3')} />
           <CalcButton label="+" variant="op" onClick={() => append('+')} />
-          <CalcButton label="%" variant="op" onClick={() => append('%')} />
+          <CalcButton label="%" variant="op" onClick={() => append('/100')} />
           <CalcButton label="(" variant="op" onClick={() => append('(')} />
 
           {/* Row 4 */}
