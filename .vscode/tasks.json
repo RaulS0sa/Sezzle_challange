@@ -1,0 +1,50 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "run-backend",
+      "type": "shell",
+      "command": "go run main.go",
+      "options": {
+        "cwd": "${workspaceFolder}/sezzle-calculator/server"
+      },
+      "isBackground": true,
+      "presentation": {
+        "group": "fullstack",
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      // This dummy matcher tells VS Code the task is "running" immediately
+      "problemMatcher": {
+        "pattern": [{ "regexp": "^.*$" }],
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*$",
+          "endsPattern": "^.*$"
+        }
+      }
+    },
+    {
+      "label": "run-frontend",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": {
+        "cwd": "${workspaceFolder}/sezzle-calculator/client"
+      },
+      "isBackground": true,
+      "presentation": {
+        "group": "fullstack",
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": {
+        "pattern": [{ "regexp": "^.*$" }],
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*$",
+          "endsPattern": "^.*$"
+        }
+      }
+    }
+  ]
+}
