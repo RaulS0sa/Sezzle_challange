@@ -19,4 +19,6 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  { ignores: ['dist', 'coverage', 'node_modules'] }, 
+
 ])
