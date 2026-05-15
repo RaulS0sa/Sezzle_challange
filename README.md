@@ -30,19 +30,6 @@ cd server
 go test -v -coverprofile=coverage.out ./...
 go tool cover -func=coverage.out
 
-Coverage(frontend)
- % Coverage report from istanbul
---------------------|---------|----------|---------|---------|-------------------
-File                | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
---------------------|---------|----------|---------|---------|-------------------
-All files           |   66.66 |    62.85 |     100 |      75 |                   
- calculatorLogic.ts |   66.66 |    62.85 |     100 |      75 | 9,14,23-24,31     
---------------------|---------|----------|---------|---------|-------------------
-
-Coverage (backend)
-ok  	github.com/raulsosa/sezzle-calculator	(cached)	coverage: 73.8% of statements
-
-
 ---
 
 ## 🧠 Design Decisions & Rationale
@@ -99,6 +86,19 @@ cd server
 go test -v
 ```
 
+### Coverage (backend)  73.8% of statements
+
+
+### Coverage(frontend)
+
+
+File                | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+--------------------|---------|----------|---------|---------|-------------------
+All files           |   66.66 |    62.85 |     100 |      75 |                   
+ calculatorLogic.ts |   66.66 |    62.85 |     100 |      75 | 9,14,23-24,31     
+
+
+ 
 ---
 
 ## 📡 API Documentation
