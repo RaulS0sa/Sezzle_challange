@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { History, Delete, X } from 'lucide-react';
+import { getNewDisplay } from './calculatorLogic'; // Import the logic!
+
 
 const App: React.FC = () => {
   const [display, setDisplay] = useState<string>('0');
@@ -8,55 +10,23 @@ const App: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
 const append = (val: string) => {
-  setError(null);
-
-  // 1. Handle state after a result was just calculated
-  if (hasResult) {
-    setHasResult(false);
-    if (!isNaN(Number(val)) || val === '00' || val === '.') {
-      // Starting a brand new calculation
-      setDisplay(val === '00' ? '0' : val);
-      setExpression('');
-      return;
-    } else {
-      // Continuing the calculation using the result as the first operand
-      setExpression(display);
-      // If we continue with a parenthesis, add implicit multiplication: "10" -> "10*("
-      if (display == '0' && (val === '(' || val === 'sqrt(')) {
-        setDisplay(val);
-      }
-      else if (val === '(' || val === 'sqrt(') {
-        setDisplay(display + '*' + val);
+    setError(null);
+    
+    // Call the external logic
+    const nextDisplay = getNewDisplay(display, val, hasResult);
+    
+    // Manage the "floating" expression state
+    if (hasResult) {
+      if (!isNaN(Number(val)) || val === '00' || val === '.') {
+        setExpression('');
       } else {
-        setDisplay(display + val);
+        setExpression(display);
       }
-      return;
+      setHasResult(false);
     }
-  }
-
-  // 2. Handle standard input
-  setDisplay((prev) => {
-    // Case: Starting fresh (display is "0")
-    if (prev === '0') {
-      if (val === '.') return '0.';
-      if (val === '00') return '0';
-      if (val === 'sqrt(') return 'sqrt(';
-      if (val === '(') return '(';
-      // Replace "0" with "(" or "sqrt(" or "7"
-      return val;
-    }
-
-    // Case: Implicit Multiplication
-    // If last character is a digit and user clicks "(" or "sqrt(", insert "*" automatically
-    const lastChar = prev.slice(-1);
-    const isLastCharDigit = !isNaN(Number(lastChar)) || lastChar === ')'; 
-    if (isLastCharDigit && (val === '(' || val === 'sqrt(')) {
-      return prev + '*' + val;
-    }
-
-    return prev + val;
-  });
-};
+    
+    setDisplay(nextDisplay);
+  };
 
   const calculate = async () => {
     try {
