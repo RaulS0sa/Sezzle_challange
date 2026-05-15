@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { History, Delete, X } from 'lucide-react';
 import { getNewDisplay } from './calculatorLogic'; // Import the logic!
+import { useEffect } from 'react';
 
 
 const App: React.FC = () => {
@@ -8,6 +9,25 @@ const App: React.FC = () => {
   const [expression, setExpression] = useState<string>('');
   const [hasResult, setHasResult] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Inside your App component:
+useEffect(() => {
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key >= '0' && e.key <= '9') append(e.key);
+    if (e.key === '.') append('.');
+    if (e.key === '+') append('+');
+    if (e.key === '-') append('-');
+    if (e.key === '*') append('*');
+    if (e.key === '/') append('/');
+    if (e.key === '^') append('^');
+    if (e.key === 'Enter' || e.key === '=') calculate();
+    if (e.key === 'Backspace') setDisplay(d => d.length > 1 ? d.slice(0,-1) : '0');
+    if (e.key === 'Escape') { setDisplay('0'); setExpression(''); setError(null); }
+  };
+
+  window.addEventListener('keydown', handleKeyDown);
+  return () => window.removeEventListener('keydown', handleKeyDown);
+}, [display, hasResult]); // Depend on state to ensure append/calculate have latest values
 
 const append = (val: string) => {
     setError(null);
@@ -27,6 +47,8 @@ const append = (val: string) => {
     
     setDisplay(nextDisplay);
   };
+
+  
 
   const calculate = async () => {
     try {
@@ -112,5 +134,6 @@ const append = (val: string) => {
     </div>
   );
 };
+
 
 export default App;

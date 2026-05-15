@@ -1,0 +1,15 @@
+# Node
+client/node_modules/
+client/dist/
+client/.env
+
+# Go
+server/server
+server/*.exe
+server/coverage.out
+server/coverage.html
+server/__debug_bin3151462167
+
+# IDE
+.vscode/
+.DS_Store
