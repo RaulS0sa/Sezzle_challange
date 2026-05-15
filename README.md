@@ -1,18 +1,18 @@
 ***
 
-# Full-Stack Scientific Calculator
+# Full-Stack Scientific Calculator (Sezzle Technical Assessment)
 
 A professional-grade calculator application featuring a **Go (Gin)** microservice for arithmetic logic and a **React (TypeScript)** frontend inspired by modern scientific calculator layouts.
 
 ## 🚀 Overview
 
-This project fulfills the Sezzle technical assessment by providing a robust calculator capable of basic and advanced operations, including nested expressions, exponentiation, and square roots. 
+This project fulfills the Sezzle technical assessment by providing a robust calculator capable of basic and advanced operations, including nested expressions, exponentiation, and square roots.
 
 ### Key Features
 - **Advanced Logic**: Supports parentheses `( )`, Exponentiation `^`, Square Root `sqrt()`, and Percentage.
-- **Smart Input**: Frontend logic handles implicit multiplication (e.g., typing `5(` automatically becomes `5*(`).
-- **Responsive Design**:  6-column grid optimized for desktop and mobile.
-- **Robust Parsing**: A custom stack-based recursive parser in Go (avoiding dangerous `eval()` patterns).
+- **Smart Input**: Frontend logic handles implicit multiplication (e.g., typing `5(` automatically becomes `5*(`) and context-aware state resets.
+- **Responsive Design**: A sleek, dark-mode 6-column grid optimized for both desktop and mobile use.
+- **Robust Parsing**: A custom stack-based recursive parser in Go that ensures mathematical correctness without using risky `eval()` patterns.
 
 ---
 
@@ -20,15 +20,7 @@ This project fulfills the Sezzle technical assessment by providing a robust calc
 
 - **Backend**: Go (Golang) with the **Gin Gonic** framework.
 - **Frontend**: React 18, TypeScript, Tailwind CSS, and Lucide Icons.
-- **Testing**: Go `testing` package with `httptest` for API validation.
-
-## 🧪 Testing & Coverage
-### Backend (Go)
-To run tests and see the coverage report:
-```bash
-cd server
-go test -v -coverprofile=coverage.out ./...
-go tool cover -func=coverage.out
+- **Testing**: Go `testing` package (Backend) and Vitest with Istanbul (Frontend).
 
 ---
 
@@ -37,18 +29,17 @@ go tool cover -func=coverage.out
 ### 1. The "Recursive Descent" Parser (Backend)
 Rather than using basic string splitting or external libraries, I implemented a custom parser.
 - **Why?** Standard string splitting fails on mathematical precedence (Multiplication before Addition) and nested parentheses. This implementation uses a recursive approach to evaluate sub-expressions within parentheses first, ensuring mathematical correctness (PEMDAS).
-- **Safety**: By manually parsing the string, we eliminate "Code Injection" risks associated with expression evaluation.
+- **Safety**: By manually parsing the string runes, we eliminate "Code Injection" risks associated with expression evaluation.
 
-### 2. "Smart Append" Logic (Frontend)
-The UI handles the "messy" parts of user input before it reaches the API.
-- **Implicit Multiplication**: If a user types `5(`, the UI appends `5*(`.
-- **State Awareness**: If a result is currently displayed and the user types a number, it starts a new calculation. If they type an operator, it chains the previous result into a new expression.
-- **Percentage Handling**: Following standard calculator behavior, the `%` button appends `/100` to the expression string to treat it as a unary operator.
+### 2. Decoupled Logic & "Smart Append" (Frontend)
+To ensure the code is "maintainable and testable" (as per requirements), I decoupled the input state machine from the UI.
+- **Rationale**: The core logic resides in `calculatorLogic.ts`. This allows for high-speed unit testing without mounting components.
+- **Implicit Multiplication**: The logic detects transitions between digits and parentheses (e.g., `5(`) and automatically inserts the `*` operator to prevent syntax errors in the backend.
 
 ### 3. Error Boundary & Edge Cases
-- **Division by Zero**: Explicitly caught in the Go backend, returning a 400 Bad Request with a clear message.
-- **Negative Square Roots**: Handled with validation logic to prevent `NaN` results.
-- **Malformed Inputs**: The parser is tested against partial parentheses and invalid characters.
+- **Division by Zero**: Explicitly caught in the Go backend, returning a 400 Bad Request.
+- **Negative Square Roots**: Handled with validation logic to return a user-friendly error instead of `NaN`.
+- **Malformed Inputs**: The parser and frontend work in tandem to sanitize inputs like `++` or empty parentheses.
 
 ---
 
@@ -76,29 +67,35 @@ npm run dev
 
 ---
 
-## 🧪 Testing
+## 🧪 Testing & Coverage
 
+### Backend (Go) - 73.8% Coverage
 The backend includes a comprehensive test suite covering basic math, operator precedence, advanced functions, and API endpoint integrity.
 
-To run the tests and see the coverage:
+**Run tests:**
 ```bash
 cd server
-go test -v
+go test -v -coverprofile=coverage.out ./...
+```
+**View visual report:**
+```bash
+go tool cover -html=coverage.out -o coverage.html
 ```
 
-### Coverage (backend)  73.8% of statements
+### Frontend (React) - 66.7% Coverage
+Unit tests verify the "Smart Input" state machine to ensure valid expressions are sent to the API.
 
+**Run tests:**
+```bash
+cd client
+npm run coverage
+```
 
-### Coverage(frontend)
+| File | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **All files** | **66.66** | **62.85** | **100** | **75** | |
+| calculatorLogic.ts | 66.66 | 62.85 | 100 | 75 | 9, 14, 23-24, 31 |
 
-
-File                | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
---------------------|---------|----------|---------|---------|-------------------
-All files           |   66.66 |    62.85 |     100 |      75 |                   
- calculatorLogic.ts |   66.66 |    62.85 |     100 |      75 | 9,14,23-24,31     
-
-
- 
 ---
 
 ## 📡 API Documentation
@@ -124,20 +121,15 @@ Performs mathematical evaluation on a string expression.
 }
 ```
 
-**Error Response (400)**:
-```json
-{
-  "error": "division by zero"
-}
-```
-
 ---
 
 ## 📝 Prompts Used
+As required by the assessment instructions, here are the prompts used to assist development:
 - *Logic for recursive descent parser in Go for mathematical expressions.*
-- *React state management for calculator input chaining and implicit multiplication.*
+- *Refactor React state logic into a pure TypeScript function to handle implicit multiplication for better testability.*
 - *Tailwind CSS configurations for a 6-column scientific calculator grid.*
 - *VS Code Compound Launch configurations for multi-service debugging.*
+- *Configure Vitest coverage report using the Istanbul provider to resolve macOS Node.js 22 segmentation faults.*
 
 ---
 
